@@ -13246,6 +13246,7 @@ In bepaalde gevallen is het resultaat van de steekproef toepasbaar op de volledi
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>                               <span class="c1"># Advanced data visualisation</span>
 <span class="kn">import</span> <span class="nn">altair</span> <span class="k">as</span> <span class="nn">alt</span>                                <span class="c1"># Alternative visualisation system</span>
 <span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LinearRegression</span>
 </pre></div>
 
     </div>
@@ -13638,14 +13639,860 @@ Bepaal $z_{\alpha}$ waarvoor geldt: $P(Z&gt;z_{\alpha})= \alpha =&gt; g = \mu + 
 <li>Links van G: Regio van acceptatie ($H_{0}$ niet verwerpen)</li>
 <li>Rechts van G: Kritieke regio ($H_{0}$ verwerpen)</li>
 </ul>
-<h2 id="Student's-t-test">Student's t-test<a class="anchor-link" href="#Student's-t-test">&#182;</a></h2><h2 id="Fouten-in-hypothese-testen">Fouten in hypothese testen<a class="anchor-link" href="#Fouten-in-hypothese-testen">&#182;</a></h2>
+<h3 id="Samengevat-Testing-procedures">Samengevat Testing procedures<a class="anchor-link" href="#Samengevat-Testing-procedures">&#182;</a></h3><table>
+<thead><tr>
+<th>Goal</th>
+<th>Test met betrekking tot de waarde van de populatie gemiddelde $\mu$ gebruik makend van steekproef van n onafhankelijke waardes.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Voorwaarde</td>
+<td>De populatie heeft een random verdeling, n is groot genoeg</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead><tr>
+<th>Test type</th>
+<th>Two-tailed</th>
+<th>Left-tailed</th>
+<th></th>
+<th>Right-tailed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$H_{0}$</td>
+<td>$\mu = \mu_{0}$</td>
+<td>$\mu = \mu_{0}$</td>
+<td></td>
+<td>$\mu = \mu_{0}$</td>
+</tr>
+<tr>
+<td>$H_{1}$</td>
+<td>$\mu != \mu_{0}$</td>
+<td>$\mu &lt; \mu_{0}$</td>
+<td></td>
+<td>$\mu &gt; \mu_{0}$</td>
+</tr>
+<tr>
+<td>Critieke regio</td>
+<td>$\vert\overline{x}\vert &gt; g$</td>
+<td>$\overline{x}&lt; -g$</td>
+<td></td>
+<td>$\overline{x} &gt; g$</td>
+</tr>
+<tr>
+<td>Test statistiek</td>
+<td></td>
+<td></td>
+<td>$z=\frac{\overline{x}-\mu_{0}}{\frac{\sigma}{\sqrt{n}}}$</td>
+</tr>
+</tbody>
+</table>
+<h3 id="Voorwaardes-voor-z-test">Voorwaardes voor z-test<a class="anchor-link" href="#Voorwaardes-voor-z-test">&#182;</a></h3><ul>
+<li>De steekproef moet aselect zijn</li>
+<li>De steekproefgrootte moet groot genoeg zijn ($n\ge30$)</li>
+<li>De test statistiek moet zich gedragen als een normale verdeling</li>
+<li>De tandaard diviatie van de populatie $\sigma$ is gekend.</li>
+</ul>
+<p>Soms zijn de voorwaardes niet voldaan en dan kan geen z-test</p>
+<h2 id="Voorbeelden">Voorbeelden<a class="anchor-link" href="#Voorbeelden">&#182;</a></h2><p>zie slides.</p>
+<h2 id="Student's-t-test">Student's t-test<a class="anchor-link" href="#Student's-t-test">&#182;</a></h2><p>Wat als voorwaardes voor z-test niet voldaan zijn?</p>
+<ul>
+<li>steekproef niet groot genoeg</li>
+<li>populatie standaard diviatie niet gekend
+Als de variabele normaal verdeeld zijn kunnen we de t-test gebruiken.</li>
+</ul>
+<h3 id="De-t-test">De t-test<a class="anchor-link" href="#De-t-test">&#182;</a></h3><p>Kritieke waarde bepalen:<br>
+$g=\mu ± t * \frac{s}{\sqrt{n}}$</p>
+<ul>
+<li>t-waarde afgelijd uit de Student t-distributie gebaseerd op n-1 vrijheidsgraden</li>
+<li>De waarde opzoeken door <code>t.isf</code> in Python</li>
+<li>Los van dit is de procedure gelijk aan de procedure voor de z-test.</li>
+</ul>
+<h2 id="Fouten-in-hypothese-testen">Fouten in hypothese testen<a class="anchor-link" href="#Fouten-in-hypothese-testen">&#182;</a></h2><table>
+<thead><tr>
+<th></th>
+<th><strong>Rea</strong></th>
+<th><strong>liteit</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Conclusion</td>
+<td>$H_{0}$ True</td>
+<td>$H_{1}$ True</td>
+</tr>
+<tr>
+<td>$H_{0}$ niet verworpen</td>
+<td>correct conclusie</td>
+<td>Type II fout (vals negatief)</td>
+</tr>
+<tr>
+<td>$H_{0}$ verworpen</td>
+<td>Type I fout (vals positief)</td>
+<td>correct conclusie</td>
+</tr>
+</tbody>
+</table>
+<p>P(type I error) = $\alpha$ (=significantie level)<br>
+P(type II error) = $\beta$<br>
+$\beta$ berekenen is niet triviaal maar als $\alpha$ afneemt dan neemt $\beta$ toe.</p>
+
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Samenvatting-Symbolen">Samenvatting Symbolen<a class="anchor-link" href="#Samenvatting-Symbolen">&#182;</a></h1><table>
+<hr>
+<h2 id="Python-Module-3.2">Python Module 3.2<a class="anchor-link" href="#Python-Module-3.2">&#182;</a></h2><hr>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#voorbeeld met Z</span>
+<span class="n">m</span> <span class="o">=</span> <span class="mi">44</span> <span class="c1">#gemiddelde populatie </span>
+<span class="n">s</span> <span class="o">=</span> <span class="mf">6.2</span> <span class="c1">#standaard div populatie</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">72</span> <span class="c1">#steekproefgroote</span>
+<span class="n">m_intro</span> <span class="o">=</span> <span class="mf">46.2</span> <span class="c1">#steekproef gemiddelde</span>
+<span class="n">s_intro</span> <span class="o">=</span> <span class="n">s</span><span class="o">/</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="c1">#steekproef std?</span>
+<span class="n">a</span> <span class="o">=</span> <span class="mf">0.025</span> <span class="c1">#alpha waarde, significantie niveau</span>
+
+<span class="c1">#Plot de grafiek voor ja de normaal verdeling enz</span>
+<span class="n">dist_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">m</span><span class="o">-</span><span class="mi">4</span><span class="o">*</span><span class="n">s_intro</span><span class="p">,</span><span class="n">m</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="n">s_intro</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">201</span><span class="p">)</span>
+<span class="n">dist_y</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">dist_x</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">s_intro</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">dist_x</span><span class="p">,</span> <span class="n">dist_y</span><span class="p">)</span>
+
+<span class="c1">#Inkleuren het stuk dat beter is? ofja gwn het te onderzoeken het H0 ding</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">dist_x</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dist_y</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="p">(</span><span class="n">dist_x</span><span class="o">&gt;=</span><span class="n">m_intro</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="c1">#vertikale lijn daarvoor</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">m_intro</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">)</span>
+
+<span class="c1">#p waarde berekenn</span>
+<span class="n">p_waarde</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">sf</span><span class="p">(</span><span class="n">m_intro</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">m</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">s_intro</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;p waarde: </span><span class="si">%.4f</span><span class="s2">&quot;</span><span class="o">%</span><span class="k">p_waarde</span>) 
+<span class="k">if</span><span class="p">(</span><span class="n">p_waarde</span> <span class="o">&lt;</span> <span class="n">a</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;p &lt; a: reject H0&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;p &gt; a: do not reject H0&quot;</span><span class="p">)</span>
+<span class="c1">#kritieke regio bepalen</span>
+<span class="n">g_value</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">isf</span><span class="p">(</span><span class="mf">0.025</span><span class="p">,</span> <span class="n">loc</span> <span class="o">=</span> <span class="n">m</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span> <span class="n">s_intro</span><span class="p">)</span> 
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Critical value g ≃ </span><span class="si">%.3f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">g_value</span><span class="p">)</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">m_intro</span> <span class="o">&lt;</span> <span class="n">g_value</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;sample mean = </span><span class="si">%.3f</span><span class="s2"> &lt; g = </span><span class="si">%.3f</span><span class="s2">: do not reject H0&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">m_intro</span><span class="p">,</span> <span class="n">g_value</span><span class="p">))</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;sample mean = </span><span class="si">%.3f</span><span class="s2"> &gt; g = </span><span class="si">%.3f</span><span class="s2">: reject H0&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">m_intro</span><span class="p">,</span> <span class="n">g_value</span><span class="p">))</span>
+    
+<span class="c1">#voorbeeld met t</span>
+<span class="c1">#H0: dat het niet significant groter is</span>
+<span class="n">prijs</span><span class="o">=</span> <span class="p">[</span><span class="mi">400</span><span class="p">,</span> <span class="mi">350</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">350</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span>
+ <span class="mi">500</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">350</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span> <span class="c1">#is gwn dataset steekproef</span>
+<span class="n">m</span> <span class="o">=</span> <span class="mi">300</span> <span class="c1">#mag ni significant groetr zijn dan</span>
+<span class="n">a</span><span class="o">=</span><span class="mf">0.05</span> <span class="c1">#significantieniveau</span>
+<span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">prijs</span><span class="p">)</span>  <span class="c1">#lengte sample</span>
+<span class="n">m_samp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">prijs</span><span class="p">)</span> <span class="c1">#gemiddelde samp</span>
+<span class="n">s</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">prijs</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1">#std samp</span>
+<span class="n">sn</span> <span class="o">=</span> <span class="n">s</span><span class="o">/</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="c1">#s/wortel(n)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;mean is </span><span class="si">{</span><span class="n">m_samp</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;std is </span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1">#tekenen</span>
+<span class="n">dist_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">m</span><span class="o">-</span><span class="mi">4</span><span class="o">*</span><span class="n">sn</span><span class="p">,</span><span class="n">m</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="n">sn</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">201</span><span class="p">)</span>
+<span class="n">dist_y</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">dist_x</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">m</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">sn</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">dist_x</span><span class="p">,</span> <span class="n">dist_y</span><span class="p">)</span>
+<span class="c1">#aanduiden welk deel &quot;oke&quot; is voor H0</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">dist_x</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dist_y</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="p">(</span><span class="n">dist_x</span><span class="o">&lt;=</span><span class="n">m_samp</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;yellow&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">m_samp</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+
+<span class="c1">#p waarde</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">sf</span><span class="p">(</span><span class="n">m_samp</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">m</span><span class="p">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="n">sn</span><span class="p">,</span> <span class="n">df</span> <span class="o">=</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;p:value </span><span class="si">%.5f</span><span class="s2">&quot;</span><span class="o">%</span> <span class="n">p</span><span class="p">)</span>
+<span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="o">&lt;</span><span class="n">a</span><span class="p">):</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;p&lt;a:rejectH0&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;p&gt;a: niet reject H0&quot;</span><span class="p">)</span>
+
+<span class="c1">#kritieke waarde (g)</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">isf</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">m</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">sn</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;critiek g ong= </span><span class="si">%.3f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">g</span><span class="p">)</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">m_samp</span> <span class="o">&lt;</span> <span class="n">g</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;sample mean = </span><span class="si">%.3f</span><span class="s2"> &lt; g = </span><span class="si">%.3f</span><span class="s2">: do not reject H0&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">m_samp</span><span class="p">,</span> <span class="n">g</span><span class="p">))</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;sample mean = </span><span class="si">%.3f</span><span class="s2"> &gt; g = </span><span class="si">%.3f</span><span class="s2">: reject H0&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">m_samp</span><span class="p">,</span> <span class="n">g</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<hr>
+<h1 id="Module-4-Analyse-van-2-kwalitatieve-variabelen">Module 4 Analyse van 2 kwalitatieve variabelen<a class="anchor-link" href="#Module-4-Analyse-van-2-kwalitatieve-variabelen">&#182;</a></h1><hr>
+<h2 id="Bivariate-Analyse">Bivariate Analyse<a class="anchor-link" href="#Bivariate-Analyse">&#182;</a></h2><ul>
+<li>Is bepalen of er een verband is tussen 2 stochastische variabelen (X en Y)\</li>
+<li><strong>Verband</strong> = je kan voorspellen (tot zekere hoogte) wat de waarde van Y is op basis van de waarde van X<ul>
+<li>X is onafhankelijke variabele</li>
+<li>Y is afhankelijke variabele</li>
+</ul>
+</li>
+<li><strong>Opgelet</strong> Een verband is niet noodzakelijk een oorzakelijk verband.</li>
+</ul>
+<h3 id="Overzicht-bivariate-analyse">Overzicht bivariate analyse<a class="anchor-link" href="#Overzicht-bivariate-analyse">&#182;</a></h3><table>
+<thead><tr>
+<th><strong>Onafhankelijke</strong></th>
+<th><strong>Afhankelijke</strong></th>
+<th><strong>Test/Metric</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kwalitatief</td>
+<td>Kwalitatief</td>
+<td>$\chi^2$-test <br /> Cramér's V</td>
+</tr>
+<tr>
+<td>Kwalitatief</td>
+<td>Kwantitatief</td>
+<td>Two-sample t-test <br /> Cohen's d</td>
+</tr>
+<tr>
+<td>Kwantitatief</td>
+<td>Kwantitatief</td>
+<td>- <br /> Regression, correlation</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Contingency-tables">Contingency tables<a class="anchor-link" href="#Contingency-tables">&#182;</a></h2><p>(= tabel waarin ene variabele in de rijen en een andere in de kolom om zo een verband te onderzoeken.)</p>
+<table>
+<thead><tr>
+<th>Gender Survey</th>
+<th>Female</th>
+<th>Male</th>
+<th>Total</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Strongly disagree</td>
+<td>0</td>
+<td>4</td>
+<td>4</td>
+</tr>
+<tr>
+<td>Disagree</td>
+<td>17</td>
+<td>45</td>
+<td>62</td>
+</tr>
+<tr>
+<td>Neutral</td>
+<td>23</td>
+<td>91</td>
+<td>114</td>
+</tr>
+<tr>
+<td>Agree</td>
+<td>12</td>
+<td>53</td>
+<td>65</td>
+</tr>
+<tr>
+<td>Strongly agree</td>
+<td>0</td>
+<td>5</td>
+<td>5</td>
+</tr>
+<tr>
+<td>Total</td>
+<td>52</td>
+<td>198</td>
+<td>250</td>
+</tr>
+</tbody>
+</table>
+<h3 id="Verwachte-waardes">Verwachte waardes<a class="anchor-link" href="#Verwachte-waardes">&#182;</a></h3><p>Als er geen verschil (associatie) is verwachten we dezelfde ratios in elke kolom van de tabel. In elke cel dus: (rij totaal x kolom totaal)/n</p>
+<table>
+<thead><tr>
+<th>Gender Survey</th>
+<th>Female</th>
+<th>Male</th>
+<th>Total</th>
+<th>EFemale</th>
+<th>EMale</th>
+<th>ETotal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Strongly disagree</td>
+<td>0</td>
+<td>4</td>
+<td>4</td>
+<td>0.832</td>
+<td>3.168</td>
+<td>4</td>
+</tr>
+<tr>
+<td>Disagree</td>
+<td>17</td>
+<td>45</td>
+<td>62</td>
+<td>12.896</td>
+<td>49.104</td>
+<td>62</td>
+</tr>
+<tr>
+<td>Neutral</td>
+<td>23</td>
+<td>91</td>
+<td>114</td>
+<td>23.712</td>
+<td>90.288</td>
+<td>114</td>
+</tr>
+<tr>
+<td>Agree</td>
+<td>12</td>
+<td>53</td>
+<td>65</td>
+<td>13.520</td>
+<td>51.480</td>
+<td>65</td>
+</tr>
+<tr>
+<td>Strongly agree</td>
+<td>0</td>
+<td>5</td>
+<td>5</td>
+<td>1.040</td>
+<td>3.960</td>
+<td>5</td>
+</tr>
+<tr>
+<td>Total</td>
+<td>52</td>
+<td>198</td>
+<td>250</td>
+<td>52</td>
+<td>198</td>
+<td>250</td>
+</tr>
+</tbody>
+</table>
+<p>voorbeeld Strongly Disagree:\
+EFemale = $\frac{52(FemaleTot) * 4 (Strongly disagree tot)}{250 (totaal totaal)} = 0.832$\
+EMale =$\frac{198(MaleTot) * 4 (Strongly disagree tot)}{250 (totaal totaal)} = 3.168$\
+Totaal Strongly disagree = 0.832 + 3.168 = 4 (= strongly disagree tot)</p>
+<h3 id="Sprijding-meten">Sprijding meten<a class="anchor-link" href="#Sprijding-meten">&#182;</a></h3><p>Hoe ver is de geobserveerde waarde  van de verwachte e? $\frac{(o-e)^2}{e}$.</p>
+<h3 id="De-chi-kwadraad-statistiek">De chi-kwadraad statistiek<a class="anchor-link" href="#De-chi-kwadraad-statistiek">&#182;</a></h3><p>$\chi^2 = \sum_{i}{\frac{(o_{i}-e_{i})^2}{e_{i}}}$</p>
+<ul>
+<li>$o_{i}$ = aantal observaties in de i'de cel van de contingency tabel</li>
+<li>$e_{i}$ = verwachte frequentie</li>
+<li>Kleine waarde =&gt; geen verband </li>
+<li>Grote waarde =&gt; verband</li>
+</ul>
+<p><strong>Wanneer $\chi^2$ groot genoeg?</strong></p>
+<ul>
+<li>bij 2x2 tabel is $\chi^2$ = 10 relatief groot =&gt; verband</li>
+<li>bij 5x5 tabel is $\chi^2$ = 10 relatief klein =&gt; geen Verband  </li>
+</ul>
+<p>Er is dus nood aan een ding onafhankelijk aan de groote van de tabel</p>
+<h3 id="Cram&#233;r's-V">Cram&#233;r's V<a class="anchor-link" href="#Cram&#233;r's-V">&#182;</a></h3><p>$V = \sqrt{\frac{\chi^2}{n(k-1)}}$<br>
+Met n het aantal observaties en k het min(numRows, numCols)</p>
+<table>
+<thead><tr>
+<th>Cramér's V</th>
+<th>Interpretatie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$\approx$ 0</td>
+<td>Geen verband</td>
+</tr>
+<tr>
+<td>$\approx$ 0.1</td>
+<td>Zwak verband</td>
+</tr>
+<tr>
+<td>$\approx$ 0.25</td>
+<td>Gemiddeld verband</td>
+</tr>
+<tr>
+<td>$\approx$ 0.5</td>
+<td>Sterk verband</td>
+</tr>
+<tr>
+<td>$\approx$ 0.75</td>
+<td>Heel sterk verband</td>
+</tr>
+<tr>
+<td>$\approx$ 1</td>
+<td>Volledig verband</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Chi-kwadraad-test-voor-onafhankelijkheid">Chi-kwadraad test voor onafhankelijkheid<a class="anchor-link" href="#Chi-kwadraad-test-voor-onafhankelijkheid">&#182;</a></h2><ul>
+<li>= alternateif voor Cramér's V om te onderzoeken wat het verband is tss kwalitatieve variabelen</li>
+<li>De waarde van $\chi^2$ verdeeld over de $\chi^2$ verdeling?</li>
+</ul>
+<h3 id="Test-procedure">Test procedure<a class="anchor-link" href="#Test-procedure">&#182;</a></h3><ol>
+<li>Hypotheses opstellen:<ul>
+<li>$H_{0}$: er is geen verband ($\chi^2$ is klein)</li>
+<li>$H_{1}$: er is een verband ($\chi^2$ is groot)</li>
+</ul>
+</li>
+<li>Kies significantie niveau</li>
+<li>Bereken teststatistiek ($\chi^2$)</li>
+<li>Gebruik df = (numRox-1)*(numCol-1) en ofwel:<ul>
+<li>Kritieke waarde g berkenen  (P($\chi^2$)=$\alpha$) </li>
+<li>Bereken p-waarde</li>
+</ul>
+</li>
+<li>Trek conclusies<ul>
+<li>$\chi^2&lt;g$: $H_{0}$ niet verwerpen;  $\chi^2&gt;g$: $H_{0}$ verwerpen</li>
+<li>p &gt; $\alpha$: $H_{0}$ niet verwerpen; p &lt; $\alpha$: $H_{0}$ verwerpen</li>
+</ul>
+</li>
+</ol>
+<h4 id="In-python:">In python:<a class="anchor-link" href="#In-python:">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">chiAndPFromContingency</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+  <span class="n">observed</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">colmn1</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">colmn2</span><span class="p">)</span>
+  <span class="n">chi2</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">expected</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">chi2_contingency</span><span class="p">(</span><span class="n">observed</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">chi2</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">df</span><span class="p">,</span> <span class="n">expected</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Goodness-of-fit-test">Goodness-of-fit test<a class="anchor-link" href="#Goodness-of-fit-test">&#182;</a></h2><p>De $\chi^2$ test kan ook gebruikt worden voor bepalen van representatieviteit van een steekproef voor de populatie.<br>
+De goodness-of-fit test indiceert in welke mate een steekproef overeenkomt met de null hypothese met betrekking tot de verdeling van een kwalitatieve var over meerdere exclusieve klassen.<br>
+Als $\chi^2$  klein is dan is het representatief en anders niet. $\chi^2$ meet tot welke mate er conflict is met de null hypothese</p>
+<h2 id="Gestandardiseerde-residuen">Gestandardiseerde residuen<a class="anchor-link" href="#Gestandardiseerde-residuen">&#182;</a></h2><p>Indiceert welke klassen de meeste bijdragen bieden tot de waarde van $\chi^2$</p>
+<p>$r_{i} = \frac{o_{i}-n\pi_{i}}{\sqrt{n\pi_{i}(1-\pi_{i})}}$</p>
+<ul>
+<li>$r_{i} \in [-2,2]$ Acceptabel </li>
+<li>$r_{i}$ &lt; -2 = onder vertegenwordigd</li>
+<li>$r_{i}$ &gt; 2 = over vertegenwoordigd</li>
+</ul>
+<h2 id="Cochran's-rules">Cochran's rules<a class="anchor-link" href="#Cochran's-rules">&#182;</a></h2><p>Om $\chi^2$ test te kunnen toepassen moeten de volgende regels voldaan zijn:</p>
+<ol>
+<li>Van alle categorieen moet de verwachte frequentie e hoger zijn dan 1</li>
+<li>In maximum 20% van de categorieen is de verwachte frequentie e kleiner dan 5</li>
+</ol>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<hr>
+<h2 id="Python-Module-4">Python Module 4<a class="anchor-link" href="#Python-Module-4">&#182;</a></h2><hr>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Module-5:-Analyse-van-Kwalitatieve-vs-kwantitatieve-variabelen">Module 5: Analyse van Kwalitatieve vs kwantitatieve variabelen<a class="anchor-link" href="#Module-5:-Analyse-van-Kwalitatieve-vs-kwantitatieve-variabelen">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Data-visualisatie">Data visualisatie<a class="anchor-link" href="#Data-visualisatie">&#182;</a></h2><p>Chart types voor kwantitatieve data gegroepeerd per kwalitatieve data: Grouped boxplot, grouped density plot, bar chart MET ERROR BARS,...</p>
+<h2 id="Two-sample-t-test">Two sample t-test<a class="anchor-link" href="#Two-sample-t-test">&#182;</a></h2><p>Is het gemiddelde van 2 steekproeven significant verschillend?</p>
+<h3 id="Onafhankelijke-steekproeven">Onafhankelijke steekproeven<a class="anchor-link" href="#Onafhankelijke-steekproeven">&#182;</a></h3><p>met <code>stats.ttest_ind(a, b, alternative="less", equel_var=False)</code><br>
+idk<br>
+Voorbeeld: Een clinische studie waarbij een groep een placebo krijgt en eeen andere groep het medicijn.</p>
+<h4 id="Test-procedure">Test procedure<a class="anchor-link" href="#Test-procedure">&#182;</a></h4><ol>
+<li>Hypotheses (in voorbeeld):<ol>
+<li>$H_{0}: \mu_{2}-\mu_{2} = 0$</li>
+<li>$H_{0}: \mu_{2}-\mu_{2} &lt; 0$</li>
+</ol>
+</li>
+<li>Significantie niveau: $\alpha$ = 0.05</li>
+<li>Test statistiek:<ol>
+<li>$\overline{x}-\overline{y}= -12.833$</li>
+<li>$\overline{x} = estimation for \mu_{1}$ (control groep)</li>
+<li>$\overline{y} = estimation for \mu_{2}$ (intervention groep)</li>
+</ol>
+</li>
+<li>p Berkenen</li>
+<li>conclusie</li>
+</ol>
+<h2 id="Afhankelijke-steekproeven">Afhankelijke steekproeven<a class="anchor-link" href="#Afhankelijke-steekproeven">&#182;</a></h2><p>Bijvoorbeeld. Brandstof met toevoegingen lager verbruik of niet? 10 autos zonder toevoegingen en 10 met.
+<code>stats.ttest_rel(regular, additives, alternative='less')</code></p>
+<h4 id="Test-procedure">Test procedure<a class="anchor-link" href="#Test-procedure">&#182;</a></h4><ol>
+<li>Hypotheses (voorbeeld):<ol>
+<li>$H_{0}: \overline{x-y} = 0$</li>
+<li>$H_{0}: \overline{x-y} &gt; 0$</li>
+</ol>
+</li>
+<li>Significantie niveau: $\alpha$ = 0.05</li>
+<li>Test statistiek:<ol>
+<li>$\overline{x-y}$ </li>
+<li>x = mijl per lieter met additieve</li>
+<li>y = mijl per lieter met gewoon</li>
+</ol>
+</li>
+<li>berkenen p</li>
+<li>conclusie</li>
+</ol>
+<h2 id="Effect-groote">Effect groote<a class="anchor-link" href="#Effect-groote">&#182;</a></h2><p>De effectgrootte is een maat die uitdrukt hoe groot het verschil is tussen twee groepen.</p>
+<ul>
+<li>control groep vs interventie groep</li>
+<li>Kan gebruikt worden bovenop hypothese test</li>
+<li>vaak gebruikt in onderwijs wetenschap</li>
+<li>Er zijn meerdere definities. Hier: Cohen's d</li>
+</ul>
+<h3 id="cohen's-d">cohen's d<a class="anchor-link" href="#cohen's-d">&#182;</a></h3><p>d=$\frac{\overline{x_{1}}-\overline{x_{2}}}{s}$</p>
+<p>met steekproefgemiddelde $\overline{x_{1}}, \overline{x_{2}}$ en s als standaard diviatie van beide groepen gecombineerd.<br>
+$s=\sqrt{\frac{(n_{1}-1)s_{1}^2 + (n_{2}-1)s_{2}^2 }{n_{1}+n_{2}-2}}$
+met $ n_{1}, n_{2} $ de steekproefgrootte en $s_{1}, s_{2}$ de standaard afwijking</p>
+<h4 id="Interpretatie-van-cohen's-d">Interpretatie van cohen's d<a class="anchor-link" href="#Interpretatie-van-cohen's-d">&#182;</a></h4><table>
+<thead><tr>
+<th>$\vert d \vert$</th>
+<th>Effectgrootte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.01</td>
+<td>Heel klein</td>
+</tr>
+<tr>
+<td>0.2</td>
+<td>Klein</td>
+</tr>
+<tr>
+<td>0.5</td>
+<td>Gemiddeld</td>
+</tr>
+<tr>
+<td>0.8</td>
+<td>Groot</td>
+</tr>
+<tr>
+<td>1.2</td>
+<td>Heel groot</td>
+</tr>
+<tr>
+<td>2.0</td>
+<td>Immens</td>
+</tr>
+</tbody>
+</table>
+<p>in educational science: 0.4 = tipping punt voor gewenst effect. d= 1: verwerken leermateriaal van 1y in 6 maand.</p>
+<h3 id="Typische-aanpak-in-onderwijs-onderzoek">Typische aanpak in onderwijs onderzoek<a class="anchor-link" href="#Typische-aanpak-in-onderwijs-onderzoek">&#182;</a></h3><ul>
+<li>Onderzoekvraag: is X een goede leermethode, heeft het dus positief effect</li>
+<li>control groep gebruikt "gebruikelijke" methode</li>
+<li>interventie groep gebruikt x</li>
+<li>evaluatiemomenten</li>
+<li>punten bepalen en d berekenen</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<hr>
+<h2 id="Python-Module-5">Python Module 5<a class="anchor-link" href="#Python-Module-5">&#182;</a></h2><hr>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
+<span class="c1"># Onafhankelijke steekproeven </span>
+<span class="n">stats</span><span class="o">.</span><span class="n">ttest_ind</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;less&quot;</span><span class="p">,</span> <span class="n">equel_var</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  
+<span class="c1">### Afhankelijke steekproeven</span>
+<span class="n">stats</span><span class="o">.</span><span class="n">ttest_rel</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s1">&#39;less&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Module-6:-Analyse-van-2-kwantitatieve-variabelen">Module 6: Analyse van 2 kwantitatieve variabelen<a class="anchor-link" href="#Module-6:-Analyse-van-2-kwantitatieve-variabelen">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Data-visualization">Data visualization<a class="anchor-link" href="#Data-visualization">&#182;</a></h2><p>Scatterplot</p>
+<ul>
+<li>x-ass: onafhankelijke variabele</li>
+<li>y-ass: afhankelijke variabele</li>
+<li>elk punt is een observatie... </li>
+</ul>
+<h2 id="Lineaire-regressie">Lineaire regressie<a class="anchor-link" href="#Lineaire-regressie">&#182;</a></h2><h3 id="Regressie">Regressie<a class="anchor-link" href="#Regressie">&#182;</a></h3><p>Met regressie proberen we een consistent en systematisch verband te vinden tussen 2 kwantitatieve variabelen:</p>
+<ol>
+<li><strong>Monotoon</strong>: consistente richting van de relatie tussen 2 variabelen: toenemen/afnemen</li>
+<li><strong>Niet-monotoon</strong>: Waarde van afhankelijke var veranderd systematisch met de waaarde van de onafhankelijke variabele maar de richting is niet consistent</li>
+</ol>
+<h3 id="Lineaire-regressie">Lineaire regressie<a class="anchor-link" href="#Lineaire-regressie">&#182;</a></h3><p>Characteristieken:</p>
+<ul>
+<li>Aanwezigheid: is er een relatie?</li>
+<li>Richting: toenemen of afnemen?</li>
+<li>Sterkte van de relatie: sterk, gemiddeld, ZWAK, niet bestaande</li>
+</ul>
+<h3 id="Method-of-least-squares">Method of least squares<a class="anchor-link" href="#Method-of-least-squares">&#182;</a></h3><p>De regressielijn heeft de volgende vergelijking: $\hat{y} = \beta_{1} x + \beta_{0}$ met:</p>
+<ul>
+<li>$\beta_{1} = \frac{\sum_{i=1}^{n} {(x_{i}-\overline{x})(y_{i}-\overline{y})}}{\sum_{i=1}^{n} {(x_{i}-\overline{x})^2}}$</li>
+<li>$\beta_{0} = \overline{y} - \beta_{1}\overline{x}$</li>
+</ul>
+<h2 id="Covariantie">Covariantie<a class="anchor-link" href="#Covariantie">&#182;</a></h2><p>is de maat die indiceert of een verband tussen twee variabelen toeneemt of afneemt.<br>
+Cov(X,Y) = $\frac{1}{n-1}\sum_{i=1}^{n} {(x_{i}-\overline{x})(y_{i}-\overline{y})}$</p>
+<ul>
+<li>Cov &gt; 0: neemt toe</li>
+<li>Cov $\approx$ 0: geen relatie</li>
+<li>Cov &lt; 0: neemt af</li>
+</ul>
+<p>Opmerking: Covariantie van populatie (met n in de noemer) vs van steekproef (met n-1 in de noemer)</p>
+<h2 id="Person's-correlatie-coefficient">Person's correlatie coefficient<a class="anchor-link" href="#Person's-correlatie-coefficient">&#182;</a></h2><p>Person's prduct-mooment correlatie coefficient R is een maat om de sterkte van een lineaire correlatie tussen x en y te meten.</p>
+<p>R = $\frac{Cov(X,Y)}{\sigma_{x}\sigma_{y}}$ = $\frac{\sum_{i=1}^{n} {(x_{i}-\overline{x})(y_{i}-\overline{y})}}{\sqrt{\sum_{i=1}^{n} {(x_{i}-\overline{x})^2}}\sqrt{\sum_{i=1}^{n} {(y_{i}-\overline{y})^2}}}$</p>
+<p>R $\in$ [-1, +1]</p>
+<h2 id="Coefficient-van-determinatie">Coefficient van determinatie<a class="anchor-link" href="#Coefficient-van-determinatie">&#182;</a></h2><p>R² verklaart de percentages van de variantie van de geobserveerde waardes relatief tov de regressielijn.<br>
+R² = percentage variantie observaties verklaard door regressie lijn<br>
+1-R² = Percentage variantie observaties niet uitgelegd door de regressie</p>
+<table>
+<thead><tr>
+<th>$\vert R \vert$</th>
+<th>R²</th>
+<th>Explained variance</th>
+<th>interpretatie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.3</td>
+<td>0.1</td>
+<td>&lt; 10%</td>
+<td>Heel zwak</td>
+</tr>
+<tr>
+<td>0.3 - 0.5</td>
+<td>0.1 - 0.25</td>
+<td>10 - 25%</td>
+<td>Zwak</td>
+</tr>
+<tr>
+<td>0.5 - 0.7</td>
+<td>0.25 - 0.5</td>
+<td>25 - 50%</td>
+<td>Gemiddeld</td>
+</tr>
+<tr>
+<td>0.7 - 0.85</td>
+<td>0.5 - 0.75</td>
+<td>50 - 75%</td>
+<td>Sterk</td>
+</tr>
+<tr>
+<td>0.85 - 0.95</td>
+<td>0.75 - 0.9</td>
+<td>75 - 90%</td>
+<td>Heel sterk</td>
+</tr>
+<tr>
+<td>&gt; 0.95</td>
+<td>&gt; 0.9</td>
+<td>&gt; 90%</td>
+<td>Uitzonderlijk</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Bedenkingen">Bedenkingen<a class="anchor-link" href="#Bedenkingen">&#182;</a></h2><ul>
+<li>De correlatie coefficient kijkt enkel naar het verband tussen 2 variabelen. Interacties met andere variabelen wordd niet in rekening genomen.</li>
+<li>De correlatie coefficient gaat expliciet NIET uit van een oorzakelijk verband </li>
+<li>Pearson's correlatie coefficient toont enkel lineaire verbanden</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<hr>
+<h2 id="Python-Module-6">Python Module 6<a class="anchor-link" href="#Python-Module-6">&#182;</a></h2><hr>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cats</span><span class="o">=</span> <span class="p">[</span><span class="s2">&quot;een dataset met onafh var Hwt en afh var Bwt&quot;</span><span class="p">]</span>
+<span class="c1">#scatterplot </span>
+<span class="n">sns</span><span class="o">.</span><span class="n">relplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">cats</span><span class="p">,</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;Hwt&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;Bwt&#39;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="n">cats</span><span class="o">.</span><span class="n">Sex</span><span class="p">)</span> 
+<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">cats</span><span class="p">,</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;Hwt&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;Bwt&#39;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="n">cats</span><span class="o">.</span><span class="n">Sex</span><span class="p">)</span>
+<span class="c1">#scatterplot met regressie lijn</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">regplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">cats</span><span class="o">.</span><span class="n">Hwt</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">cats</span><span class="o">.</span><span class="n">Bwt</span><span class="p">)</span>
+<span class="n">xwaarde</span> <span class="o">=</span> <span class="n">cats</span><span class="o">.</span><span class="n">Hwt</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ywaarde</span> <span class="o">=</span> <span class="n">cats</span><span class="o">.</span><span class="n">Bwt</span>
+<span class="n">rets</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">xwaarde</span><span class="p">,</span> <span class="n">ywaarde</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Regressielijn: y^=</span><span class="si">{</span><span class="n">rets</span><span class="o">.</span><span class="n">intercept_</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> + </span><span class="si">{</span><span class="n">rets</span><span class="o">.</span><span class="n">coef_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">x&quot;</span><span class="p">)</span>
+
+<span class="c1">#correlatie coefficient</span>
+<span class="n">cor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">corrcoef</span><span class="p">(</span><span class="n">cats</span><span class="o">.</span><span class="n">Hwt</span><span class="p">,</span> <span class="n">cats</span><span class="o">.</span><span class="n">Bwt</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+<span class="c1"># Determination</span>
+<span class="n">det</span> <span class="o">=</span> <span class="n">cor</span><span class="o">**</span><span class="mi">2</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Module-7:-Tijdserie-analyse">Module 7: Tijdserie-analyse<a class="anchor-link" href="#Module-7:-Tijdserie-analyse">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Tijdseries-en-voorspellingen">Tijdseries en voorspellingen<a class="anchor-link" href="#Tijdseries-en-voorspellingen">&#182;</a></h2><p>Een tijdserie is een sequentie van observaties van sommige variabelen over tijd.</p>
+<ul>
+<li>maandelijkse melk vraag</li>
+<li>jaarlijkse nieuwe studenten hogent</li>
+<li>...</li>
+</ul>
+<p>Veel beslissingen in bedrijven gebaseerd op een voorspelling van hoeveelheid.</p>
+<p>Tijd series zijn een statistisch probleem. Waarnemingen veranderen in de tijd.</p>
+<h3 id="Tijd-serie-componenten">Tijd serie componenten<a class="anchor-link" href="#Tijd-serie-componenten">&#182;</a></h3><ul>
+<li>Level</li>
+<li>Trend</li>
+<li>Seizoens fluctuaties</li>
+<li>Cylic patronen</li>
+<li>Random noise (residuals)</li>
+</ul>
+<h2 id="Tijdserie-modellen">Tijdserie modellen<a class="anchor-link" href="#Tijdserie-modellen">&#182;</a></h2><h3 id="Mathematische-model-tijdserie">Mathematische model tijdserie<a class="anchor-link" href="#Mathematische-model-tijdserie">&#182;</a></h3><p>Simpelste model</p>
+<p>$X_{t}=  b + \epsilon_{t}$</p>
+<ul>
+<li>$X_{t}$ : geschat voor tijd series op tijd t</li>
+<li>b: the level een constante gebaseert op waarnemingen $x_{t}$</li>
+<li>$\epsilon_{t}$: random noise. We gaan er van uit dat $\epsilon_{t} \approx Nor(\mu=0;\sigma)$</li>
+</ul>
+<p>We zouden ook kunnen aannemen dat er een lineair verband is met $X_{t} = b_{0} + _{1}t + \epsilon_{t}$ me level $b_{0}$ en trent $b_{1}$.</p>
+<p>De twee bovenstaande vergelijkingen zijn speciale gevallen van het polynomiaal geval:</p>
+<p>$X_{t} = b_{0} + b_{1}t + b_{2}t^2 + ... + b_{n}t^n + \epsilon_{t}$</p>
+<h3 id="Algemene-uitdrukking-tijdserie">Algemene uitdrukking tijdserie<a class="anchor-link" href="#Algemene-uitdrukking-tijdserie">&#182;</a></h3><p>$X_{t} = f(b_{0},b_{1},b_{2},...,b_{n},t) + \epsilon_{t}$</p>
+<p>We doen volgende aannames:</p>
+<ul>
+<li>Beschouw twee componenetne van veranderlijkheid<ul>
+<li>Het gemiddelde van de voorspelling veranderd met de tijd</li>
+<li>De variaties tot dat gemiddelde zijn random</li>
+</ul>
+</li>
+<li>De residuals van het model ($X_{t} - x_{t}$) hebben een constante variantie in tijd (homoscedastic)</li>
+</ul>
+<h3 id="Gokken-van-de-parameters">Gokken van de parameters<a class="anchor-link" href="#Gokken-van-de-parameters">&#182;</a></h3><p>Maak voorspellingen gebaseerd op het tijdserie model:</p>
+<ol>
+<li>Selecteer het meest gepaste model</li>
+<li>scahtten van parameters $b_{i}(i: 1,...,n)$ gebaseerd op observaties</li>
+</ol>
+<p>De estimations $\hat{b_{i}}$ zijn zo geselecteerd dat ze de geobserveerde waarde zo goed mogelijk benaderen.</p>
+<h2 id="Bewegend-gemiddelde">Bewegend gemiddelde<a class="anchor-link" href="#Bewegend-gemiddelde">&#182;</a></h2><p>Het bewegend gemiddelde (SMA) (moving average) is een serie van gemiddeldes van de laatste m observaties. Verbergt korte termijn fluctuaties en toont lange termijn fluctuaties. Parameter m is de tijd window.</p>
+<p>$SMA(t)=\sum_{i=k}^{t}{\frac{x_{i}}{m}}$</p>
+<h3 id="Gewogen-moving-average">Gewogen moving average<a class="anchor-link" href="#Gewogen-moving-average">&#182;</a></h3><p>WMA. Meer recente observaties hebben relatief meer doorweging. Een specifieke vorm is het singel exponential smoothing of het exponentieel moving average (EMA): $X_{t} = \alpha x_{t-1} + (1-\alpha)X_{t-1}$ met $\alpha$ de smoothing constante tussen 0 en 1 en t &gt;= 3</p>
+<p>Voor de rest tsta in de slides ik heb geen zin meer... en het zijn toch voornamelijk formules die we dit hoofdstuk zelf ni moeten kennnen gwn begrijpen...</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<hr>
+<h2 id="Python-Module-7">Python Module 7<a class="anchor-link" href="#Python-Module-7">&#182;</a></h2><hr>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<hr>
+<h1 id="Samenvatting-van-enkele-zaken">Samenvatting van enkele zaken<a class="anchor-link" href="#Samenvatting-van-enkele-zaken">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Samenvatting-Symbolen">Samenvatting Symbolen<a class="anchor-link" href="#Samenvatting-Symbolen">&#182;</a></h2><table>
 <thead><tr>
 <th></th>
 <th>Populatie</th>
@@ -13733,7 +14580,68 @@ Bepaal $z_{\alpha}$ waarvoor geldt: $P(Z&gt;z_{\alpha})= \alpha =&gt; g = \mu + 
 </tr>
 </tbody>
 </table>
-<h1 id="Samenvatting-python-code-(zoals-in-slides-in-overzicht-staan)">Samenvatting python code (zoals in slides in overzicht staan)<a class="anchor-link" href="#Samenvatting-python-code-(zoals-in-slides-in-overzicht-staan)">&#182;</a></h1><h2 id="Normaalverdeling-met-mean-m-en-standaard-deviation-s">Normaalverdeling met mean m en standaard deviation s<a class="anchor-link" href="#Normaalverdeling-met-mean-m-en-standaard-deviation-s">&#182;</a></h2><table>
+<h2 id="Overzicht-bivariate-analyse">Overzicht bivariate analyse<a class="anchor-link" href="#Overzicht-bivariate-analyse">&#182;</a></h2><table>
+<thead><tr>
+<th><strong>Onafhankelijke</strong></th>
+<th><strong>Afhankelijke</strong></th>
+<th><strong>Test/Metric</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kwalitatief</td>
+<td>Kwalitatief</td>
+<td>$\chi^2$-test <br /> Cramér's V</td>
+</tr>
+<tr>
+<td>Kwalitatief</td>
+<td>Kwantitatief</td>
+<td>Two-sample t-test <br /> Cohen's d</td>
+</tr>
+<tr>
+<td>Kwantitatief</td>
+<td>Kwantitatief</td>
+<td>- <br /> Regression, correlation</td>
+</tr>
+</tbody>
+</table>
+<h3 id="Cram&#233;r's-V">Cram&#233;r's V<a class="anchor-link" href="#Cram&#233;r's-V">&#182;</a></h3><p>$V = \sqrt{\frac{\chi^2}{n(k-1)}}$<br>
+Met n het aantal observaties en k het min(numRows, numCols)<br>
+En $\chi^2 = \sum_{i}{\frac{(o_{i}-e_{i})^2}{e_{i}}}$</p>
+<table>
+<thead><tr>
+<th>Cramér's V</th>
+<th>Interpretatie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$\approx$ 0</td>
+<td>Geen verband</td>
+</tr>
+<tr>
+<td>$\approx$ 0.1</td>
+<td>Zwak verband</td>
+</tr>
+<tr>
+<td>$\approx$ 0.25</td>
+<td>Gemiddeld verband</td>
+</tr>
+<tr>
+<td>$\approx$ 0.5</td>
+<td>Sterk verband</td>
+</tr>
+<tr>
+<td>$\approx$ 0.75</td>
+<td>Heel sterk verband</td>
+</tr>
+<tr>
+<td>$\approx$ 1</td>
+<td>Volledig verband</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Samenvatting-python-code-(zoals-in-slides-in-overzicht-staan)">Samenvatting python code (zoals in slides in overzicht staan)<a class="anchor-link" href="#Samenvatting-python-code-(zoals-in-slides-in-overzicht-staan)">&#182;</a></h2><h3 id="Normaalverdeling-met-mean-m-en-standaard-deviation-s">Normaalverdeling met mean m en standaard deviation s<a class="anchor-link" href="#Normaalverdeling-met-mean-m-en-standaard-deviation-s">&#182;</a></h3><table>
 <thead><tr>
 <th>Function <code>stats.</code></th>
 <th>Doel</th>
@@ -13758,16 +14666,74 @@ Bepaal $z_{\alpha}$ waarvoor geldt: $P(Z&gt;z_{\alpha})= \alpha =&gt; g = \mu + 
 </tr>
 </tbody>
 </table>
-<h2 id="Student-t-verdeling">Student t-verdeling<a class="anchor-link" href="#Student-t-verdeling">&#182;</a></h2><p>(df= degres of freedom)
+<h3 id="Student-t-verdeling">Student t-verdeling<a class="anchor-link" href="#Student-t-verdeling">&#182;</a></h3><p>(df= degres of freedom)
 |Function <code>stats.</code> | Betekenis |
 |--------|------|
 |<code>t.pdf(x, df=d)</code>| kansdichtheid voor x|
 |<code>t.cdf(x, df=d)</code>| Left-tail kans $ P(X&lt;x)$| 
 |<code>t.sf(x, df=d)</code>| Right-tail kans $ P(X&gt;x)$|
 |<code>t.isf(1-p,df=d)</code>| p% van observaties is de verwachting lager als het resultaat|</p>
+<h3 id="$\chi^2$-verdeling-in-python">$\chi^2$ verdeling in python<a class="anchor-link" href="#$\chi^2$-verdeling-in-python">&#182;</a></h3><table>
+<thead><tr>
+<th>Function <code>scipy.</code></th>
+<th>Betekenis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>chi2.pdf(x, df=d)</code></td>
+<td>kansdichtheid voor x</td>
+</tr>
+<tr>
+<td><code>chi2.cdf(x, df=d)</code></td>
+<td>Left-tail kans $ P(X&lt;x)$</td>
+</tr>
+<tr>
+<td><code>chi2.sf(x, df=d)</code></td>
+<td>Right-tail kans $ P(X&gt;x)$</td>
+</tr>
+<tr>
+<td><code>chi2.isf(1-p,df=d)</code></td>
+<td>p% van observaties is de verwachting lager als het resultaat</td>
+</tr>
+</tbody>
+</table>
+<h3 id="two-sample-t-test">two sample t-test<a class="anchor-link" href="#two-sample-t-test">&#182;</a></h3><h4 id="Onafhankelijke-steekproeven">Onafhankelijke steekproeven<a class="anchor-link" href="#Onafhankelijke-steekproeven">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">stats</span><span class="o">.</span><span class="n">ttest_ind</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;less&quot;</span><span class="p">,</span> <span class="n">equel_var</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Afhankelijke-steekproeven">Afhankelijke steekproeven<a class="anchor-link" href="#Afhankelijke-steekproeven">&#182;</a></h3>
 </div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">stats</span><span class="o">.</span><span class="n">ttest_rel</span><span class="p">(</span><span class="n">regular</span><span class="p">,</span> <span class="n">additives</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s1">&#39;less&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
@@ -13806,6 +14772,13 @@ Bepaal $z_{\alpha}$ waarvoor geldt: $P(Z&gt;z_{\alpha})= \alpha =&gt; g = \mu + 
   <span class="n">p</span> <span class="o">=</span> <span class="mi">1</span><span class="o">-</span><span class="n">alpha</span><span class="o">/</span><span class="mi">2</span>
   <span class="n">zAlpha2Kans</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">isf</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="p">(</span><span class="n">sampleSize</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
   <span class="k">return</span> <span class="p">[</span><span class="n">meanSample</span><span class="o">-</span><span class="n">zAlpha2Kans</span><span class="o">*</span><span class="p">(</span><span class="n">standaardDivSample</span><span class="o">/</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sampleSize</span><span class="p">)),</span> <span class="n">meanSample</span><span class="o">+</span><span class="n">zAlpha2Kans</span><span class="o">*</span><span class="p">(</span><span class="n">standaardDivSample</span><span class="o">/</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sampleSize</span><span class="p">))]</span>
+
+
+<span class="c1"># Chi^2 en p warade en dergeljike van een data op basis van colom</span>
+<span class="k">def</span> <span class="nf">chiAndPFromContingency</span><span class="p">(</span><span class="n">colom1</span><span class="p">,</span> <span class="n">colom2</span><span class="p">):</span>  <span class="c1">#bv rlanders.Survey, rlanders.Gender</span>
+  <span class="n">observed</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">colom1</span><span class="p">,</span> <span class="n">colom2</span><span class="p">)</span>
+  <span class="n">chi2</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">expected</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">chi2_contingency</span><span class="p">(</span><span class="n">observed</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">chi2</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">df</span><span class="p">,</span> <span class="n">expected</span>
 </pre></div>
 
     </div>
